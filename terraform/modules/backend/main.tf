@@ -45,6 +45,20 @@ resource "aws_sns_topic_subscription" "user_notification" {
 }
 
 
+/* --- SECRETS MANAGER --- */
+/*resource "aws_secretsmanager_secret" "processing_secret" {
+  name = "test_email"
+}
+
+resource "aws_secretsmanager_secret_version" "secret_value" {
+  secret_id = aws_secretsmanager_secret.processing_secret.id
+  secret_string = jsonencode(
+    {
+      sns_test_email = var.sns_test_email
+    }
+  )
+}*/
+
 /* --- OUTPUTS --- */
 output "image_bucket_id" {
   value = aws_s3_bucket.image_bucket.id
