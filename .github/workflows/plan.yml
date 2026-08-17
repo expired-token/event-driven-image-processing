@@ -23,16 +23,23 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init
-        run: terraform Init
+        working-directory: terraform
+        run: terraform init
 
       - name: Terraform Format
+        working-directory: terraform
         run: terraform fmt -recursive
 
       - name: Terraform Validate
+        working-directory: terraform
         run: terraform validate
 
       - name: Terraform Plan
+        working-directory: terraform
+        env:
+          TF_VAR_sns_test_email: ${{ secrets.SNS_TEST_EMAIL }}
         run: terraform plan
+        continue-on-error: true
 
       - name: Add Plan Comment
         uses: actions/github-script@v6
