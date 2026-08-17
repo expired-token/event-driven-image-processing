@@ -36,6 +36,8 @@ jobs:
 
       - name: Terraform Plan
         working-directory: terraform
+        env:
+          TF_VAR_sns_test_email: ${{ secrets.SNS_TEST_EMAIL }}
         run: terraform plan
         continue-on-error: true
 
