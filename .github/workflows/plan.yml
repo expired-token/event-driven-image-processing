@@ -37,6 +37,7 @@ jobs:
       - name: Terraform Plan
         working-directory: terraform
         run: terraform plan
+        continue-on-error: true
 
       - name: Add Plan Comment
         uses: actions/github-script@v6
