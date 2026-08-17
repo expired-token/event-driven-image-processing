@@ -27,4 +27,6 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
         run: terraform apply -auto-approve
