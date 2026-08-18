@@ -29,4 +29,6 @@ jobs:
 
       - name: Terraform Apply
         working-directory: terraform
+        env:
+          TF_VAR_sns_test_email: ${{ secrets.SNS_TEST_EMAIL }}
         run: terraform apply -auto-approve
