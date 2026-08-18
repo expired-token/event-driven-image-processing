@@ -36,12 +36,12 @@ resource "aws_iam_role_policy" "lambda_iam_policy" {
             "logs:CreateLogStream",
             "logs:PutLogEvents",
           ]
-          Resource = "arn:aws:logs:*:*:*" # TODO - understand thie a bit more
+          Resource = "arn:aws:logs:*:*:*"
         },
         {
           Effect   = "Allow"
-          Action   = ["sns:Publish"]
-          Resource = var.sns_topic_arn # TODO - make sure this works
+          Action   = "sns:Publish"
+          Resource = "arn:aws:sns:eu-north-1:867637277826:img-processing-outcome-topic-oaws-867637277826" # var.sns_topic_arn # TODO - make sure this works
         }
       ]
     }
@@ -71,11 +71,11 @@ resource "aws_lambda_function" "image_processing_function" {
 }
 
 # Allowing S3 to Invoke Lambda
-# N.B - This permission overwrites lambda's default resource-based policy, which rejects of all incoming requests from any service, enabling our specific S3 bucket to invoke the function upon S3 event trigger */
+# N.B - This permission overwrites lambda's default resource-based policy (aka rejecting all incoming requests from any service). Therefore, S3 bucket can invoke the function upon S3 event trigger */
 resource "aws_lambda_permission" "allow_bucket_to_invoke_lambda" {
   statement_id  = "AllowExecutionFromS3Bucket"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.image_processing_function.arn
+  function_name = aws_lambda_function.image_processing_function.function_name
   principal     = "s3.amazonaws.com"
   source_arn    = var.storage_bucket_arn
 }
@@ -89,6 +89,6 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     events              = ["s3:ObjectCreated:*"]
   }
 
-  depends_on = [aws_lambda_permission.allow_bucket_to_invoke_lambda]
+  depends_on = [ aws_lambda_permission.allow_bucket_to_invoke_lambda ]
 }
 
